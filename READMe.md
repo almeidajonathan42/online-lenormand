@@ -1,1 +1,3 @@
-"# Online Lenormand" 
+# Online Lenormand
+
+An online Lenormand reading platform.
