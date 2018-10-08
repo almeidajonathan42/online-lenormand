@@ -1,8 +1,6 @@
 (ns online-lenormand.app
-  (:require [reagent.core :as reagent :refer [render-component]]
-            [online-lenormand.main-page.core :refer [main-page]]))
+  (:require [reagent.core :as r]
+            [online-lenormand.views.home :refer [home]]))
 
 (defn init []
-  (let [c (.. js/document (createElement "DIV"))]
-    (aset c "innerHTML" "<p>i'm created</p>")
-    (.. js/document (getElementById "container") (appendChild c))))
+  (r/render-component [home] (.getElementById js/document "container")))

@@ -8,7 +8,7 @@
                  [com.cemerick/piggieback   "0.2.1"      :scope "test"]
                  [org.clojure/tools.nrepl   "0.2.13"     :scope "test"]
                  [weasel                    "0.7.0"      :scope "test"]
-                 [org.clojure/clojure       "1.8.0"]
+                 [reagent                       "0.6.0"]
                  [org.clojure/clojurescript "1.9.562"]])
 
 (require
