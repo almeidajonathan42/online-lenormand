@@ -3,3 +3,7 @@ html, body, #container {
   width: 100%;
   font-family: Arial;
 }
+
+#promptInput:focus {
+  outline: none;
+}

@@ -22,8 +22,8 @@
     (str "hsl(" hue ", " saturation "%, " lightness "%)")))
 
 (defn gradient-background [hue]
-  (let [saturation 80
-        lightness 75]
+  (let [saturation 70
+        lightness 65]
     (str "linear-gradient(to top, hsl(" hue ", " saturation "%, " lightness "%), hsl(" hue ", " saturation "%, " (- lightness 5) "%))")))
 
 ;; Components ==================================================================
@@ -43,7 +43,7 @@
         {:text {:color (description-font-color hue)
                 :width "70%"
                 :margin-top ".08em"
-                :margin-bottom "2em"
+                :margin-bottom "4em"
                 :font-size "1.4vw"
                 :font-family "Lora"
                 :text-align "center"}}]
@@ -64,16 +64,40 @@
 
 (defn input []
   (let [styles
-        {:container {:background "green"}
-         :input {:color "blue"}}]
+        {:input {:background "transparent"
+                 :color (title-font-color hue)
+                 :font-size "2em"
+                 :text-align "center"
+                 :border "none"
+                 :border-bottom (str "1px solid " (title-font-color hue))
+                 :border-radius "5px"
+                 :padding ".5em"
+                 :margin-top ".3em"
+                 :width "50vw"}}]
 
-    [:div {:style (:container styles)}
-      [:input
+    [:div
+      [:input#promptInput
         {:type "text"
          :spellCheck false
+         :auto-focus true
          :style (:input styles)
          :value @input-atom
          :on-change #(reset! input-atom (-> % .-target .-value))}]]))
+
+(defn button []
+  (let [styles
+        {:container {:background "transparent"
+                     :color (title-font-color hue)
+                     :font-size "1.5em"
+                     :text-align "center"
+                     :border (str "1px solid " (title-font-color hue))
+                     :border-radius "100vw"
+                     :padding "0.5em 1em"
+                     :margin-top "1.2em"
+                     :cursor "pointer"}}]
+
+    [:div {:style (:container styles)}
+      [:p "Go!"]]))
 
 (defn home []
   (let [styles
@@ -90,4 +114,5 @@
       [title]
       [description]
       [prompt]
-      [input]]))
+      [input]
+      [button]]))
