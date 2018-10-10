@@ -4,6 +4,55 @@ html, body, #container {
   font-family: Arial;
 }
 
+@keyframes going-down {
+  from {transform: translateY(-20px);
+        opacity: 0}
+  to {transform: translateY(0);
+      opacity: 1}
+}
+
+#title {
+  animation-name: going-down;
+  animation-duration: 1s;
+}
+
+#description {
+  animation-name: going-down;
+  animation-duration: 1s;
+  animation-delay: .2s;
+  animation-fill-mode: forwards;
+}
+
+#prompt {
+  animation-name: going-down;
+  animation-duration: 1s;
+  animation-delay: .4s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes going-up {
+  from {transform: translateY(20px);
+        opacity: 0}
+  to {transform: translateY(0);
+      opacity: 1}
+}
+
+#promptInput {
+  animation-name: going-up;
+  animation-duration: 1s;
+  animation-delay: .6s;
+  animation-fill-mode: forwards;
+}
+
 #promptInput:focus {
+  border-bottom: 1px solid white !important;
+  transition: border-bottom .5s;
+}
+
+#go-button {
   outline: none;
+  animation-name: going-up;
+  animation-duration: 1s;
+  animation-delay: .8s;
+  animation-fill-mode: forwards;
 }

@@ -18,7 +18,7 @@
 
 (defn description-font-color [hue]
   (let [saturation 100
-        lightness 90]
+        lightness 80]
     (str "hsl(" hue ", " saturation "%, " lightness "%)")))
 
 (defn gradient-background [hue]
@@ -35,7 +35,7 @@
                  :font-size "7vw"
                  :font-weight "bolder"}}]
 
-    [:h1 {:style (:title styles)}
+    [:h1#title {:style (:title styles)}
       "Online Lenormand"]))
 
 (defn description []
@@ -46,18 +46,20 @@
                 :margin-bottom "4em"
                 :font-size "1.4vw"
                 :font-family "Lora"
-                :text-align "center"}}]
+                :text-align "center"
+                :opacity 0}}] ;; Related to the animation
 
-    [:p {:style (:text styles)}
+    [:p#description {:style (:text styles)}
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]))
 
 (defn prompt []
   (let [styles
         {:prompt {:color (title-font-color hue)
                   :font-family "Charmonman"
-                  :font-size "3vw"}}]
+                  :font-size "3vw"
+                  :opacity 0}}] ;; Related to the animation
 
-    [:h1 {:style (:prompt styles)}
+    [:h1#prompt {:style (:prompt styles)}
       "What do you want to reflect about?"]))
 
 (def input-atom (r/atom ""))
@@ -69,11 +71,14 @@
                  :font-size "2em"
                  :text-align "center"
                  :border "none"
-                 :border-bottom (str "1px solid " (title-font-color hue))
+                 :border-bottom (str "1px solid " (description-font-color hue))
+                 :transition "border-bottom .5s"
                  :border-radius "5px"
-                 :padding ".5em"
+                 :padding ".2em .5em"
                  :margin-top ".3em"
-                 :width "50vw"}}]
+                 :width "50vw"
+                 :outline "none"
+                 :opacity 0}}] ;; Related to the animation
 
     [:div
       [:input#promptInput
@@ -94,9 +99,10 @@
                      :border-radius "100vw"
                      :padding "0.5em 1em"
                      :margin-top "1.2em"
-                     :cursor "pointer"}}]
+                     :cursor "pointer"
+                     :opacity 0}}] ;; Related to the animation
 
-    [:div {:style (:container styles)}
+    [:div#go-button {:style (:container styles)}
       [:p "Go!"]]))
 
 (defn home []
