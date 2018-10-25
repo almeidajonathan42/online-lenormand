@@ -1,5 +1,6 @@
 (ns online-lenormand.views.home
-  (:require [reagent.core :as r]))
+  (:require [reagent.core :as r]
+            [re-frame.core :as rf]))
 
 ;; Color util ==================================================================
 
@@ -102,7 +103,8 @@
                      :cursor "pointer"
                      :opacity 0}}] ;; Related to the animation
 
-    [:div#go-button {:style (:container styles)}
+    [:div#go-button {:style (:container styles)
+                     :on-click #(js.console.log "Reframe:" @(rf/subscribe [:reflection-input]))}
       [:p "Go!"]]))
 
 (defn home []
