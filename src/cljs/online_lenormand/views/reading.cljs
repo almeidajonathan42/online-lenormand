@@ -1,37 +1,12 @@
 (ns online-lenormand.views.reading
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
-            [online-lenormand.data.cards-meanings :refer [cards-meanings]]))
+            [online-lenormand.data.cards-meanings :refer [cards-meanings]]
+            [clojure.string :refer [join]]
+            [online-lenormand.util.util :refer [s title-font-color card-font-color card-color random-color gradient-background description-font-color]]))
 
-;; Color util ==================================================================
-
-(defn random-color []
-  (let [random-number (rand-int 360)]
-    (if (and (> random-number 20) (< random-number 160))
-      (+ random-number 100)
-      random-number)))
 
 (def hue (random-color))
-
-(defn title-font-color [hue]
-  (let [saturation 100
-        lightness 95]
-    (str "hsl(" hue ", " saturation "%, " lightness "%)")))
-
-(defn card-color [hue]
-  (let [saturation 100
-        lightness 80]
-    (str "hsl(" hue ", " saturation "%, " lightness "%)")))
-
-(defn card-font-color [hue]
-  (let [saturation 100
-        lightness 30]
-    (str "hsl(" hue ", " saturation "%, " lightness "%)")))
-
-(defn gradient-background [hue]
-  (let [saturation 70
-        lightness 65]
-    (str "linear-gradient(to top, hsl(" hue ", " saturation "%, " lightness "%), hsl(" hue ", " saturation "%, " (- lightness 5) "%))")))
 
 ;; Components ==================================================================
 
@@ -46,36 +21,79 @@
     [:h1#title {:style (:title styles)}
       "What should I do to meet my next love?"]))
 
-(defn meanings [number]
+(defn select-meaning [selected-meaning new-meaning is-open]
+  (if @is-open
+    (do
+      (reset! selected-meaning new-meaning)
+      (reset! is-open false))
+    (do
+      (reset! is-open true))))
+
+
+(defn meanings [number is-open selected-meaning]
   (let [keyword-number (keyword (str number))
         styles
-        {:container {:height "6vw"
-                     :width "12vw"
+        {:container {:width "12vw"
                      :margin "1em"
                      :border-radius "1em"
-                     :border "1px solid black"
+                     :border (if @is-open (s "1px solid" (card-font-color hue))
+                                          "1px solid transparent")
+                     :background (if (not @is-open) (description-font-color hue))
+                     :cursor "pointer"
                      :display "flex"                   ;;Centering logic
                      :flex-direction "column"          ;;Centering logic
                      :align-items "center"             ;;Centering logic
-                     :justify-content "center"} ;;Centering logic
-         :meaning {:height "2em"
+                     :justify-content "center"}        ;;Centering logic
+         :container-closed {:width "12vw"
+                            :margin "1em"
+                            :border-radius "1em"
+                            :border "none"
+                            :background (description-font-color hue)
+                            :color (gradient-background hue)
+                            :cursor "pointer"
+                            :display "flex"                   ;;Centering logic
+                            :flex-direction "column"          ;;Centering logic
+                            :align-items "center"             ;;Centering logic
+                            :justify-content "center"} ;;Centering logic
+         :meaning {:height "2.2em"
                    :width "100%"
-                   :color (card-font-color hue)
+                   :color (if @is-open (card-font-color hue)
+                                       (gradient-background hue))
                    :display "flex"                   ;;Centering logic
                    :flex-direction "column"          ;;Centering logic
                    :align-items "center"             ;;Centering logic
                    :justify-content "center"}}] ;;Centering logic
 
-    [:div {:style (:container styles)}
-      [:div {:style (:meaning styles)}
-        [:p (get-in cards-meanings [:en keyword-number :meaning-1])]]
-      [:div {:style (:meaning styles)}
-        [:p (get-in cards-meanings [:en keyword-number :meaning-2])]]
-      [:div {:style (:meaning styles)}
-        [:p (get-in cards-meanings [:en keyword-number :meaning-3])]]]))
+    (if @is-open
+      [:div {:style (:container styles)}
+        [:div {:style (:meaning styles)
+               :on-click #(select-meaning selected-meaning 1 is-open)}
+          [:p (get-in cards-meanings [:en keyword-number :meaning-1])]]
+        [:div {:style (:meaning styles)
+               :on-click #(select-meaning selected-meaning 2 is-open)}
+          [:p (get-in cards-meanings [:en keyword-number :meaning-2])]]
+        [:div {:style (:meaning styles)
+               :on-click #(select-meaning selected-meaning 3 is-open)}
+          [:p (get-in cards-meanings [:en keyword-number :meaning-3])]]]
+
+      [:div {:style (:container styles)}
+        (if (= 1 @selected-meaning)
+          [:div {:style (:meaning styles)
+                 :on-click #(select-meaning selected-meaning 1 is-open)}
+            [:p (get-in cards-meanings [:en keyword-number :meaning-1])]])
+        (if (= 2 @selected-meaning)
+          [:div {:style (:meaning styles)
+                 :on-click #(select-meaning selected-meaning 2 is-open)}
+            [:p (get-in cards-meanings [:en keyword-number :meaning-2])]])
+        (if (= 3 @selected-meaning)
+          [:div {:style (:meaning styles)
+                 :on-click #(select-meaning selected-meaning 3 is-open)}
+            [:p (get-in cards-meanings [:en keyword-number :meaning-3])]])])))
 
 (defn card [number name]
-  (let [styles
+  (let [is-open (r/atom true)
+        selected-meaning (r/atom nil)
+        styles
         {:container {:background (card-color hue)
                      :height "18vw"
                      :width "12vw"
@@ -102,7 +120,7 @@
           [:p number]]
         [:div {:style (:card-name-container styles)}
           [:p name]]]
-      [meanings number]]))
+      [meanings number is-open selected-meaning]]))
 
 
 (defn draw-cards [number]
@@ -117,7 +135,7 @@
         styles
         {:container {:display "flex"              ;;Centering logic
                      :flex-direction "row"        ;;Centering logic
-                     :align-items "center"        ;;Centering logic
+                     :align-items "flex-start"        ;;Centering logic
                      :justify-content "center"}}] ;;Centering logic
 
     [:div {:style (:container styles)}

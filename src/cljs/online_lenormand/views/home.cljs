@@ -1,31 +1,10 @@
 (ns online-lenormand.views.home
   (:require [reagent.core :as r]
-            [re-frame.core :as rf]))
+            [re-frame.core :as rf]
+            [online-lenormand.util.util :refer [s title-font-color card-font-color card-color random-color gradient-background description-font-color]]))
 
-;; Color util ==================================================================
-
-(defn random-color []
-  (let [random-number (rand-int 360)]
-    (if (and (> random-number 20) (< random-number 160))
-      (+ random-number 100)
-      random-number)))
 
 (def hue (random-color))
-
-(defn title-font-color [hue]
-  (let [saturation 100
-        lightness 95]
-    (str "hsl(" hue ", " saturation "%, " lightness "%)")))
-
-(defn description-font-color [hue]
-  (let [saturation 100
-        lightness 80]
-    (str "hsl(" hue ", " saturation "%, " lightness "%)")))
-
-(defn gradient-background [hue]
-  (let [saturation 70
-        lightness 65]
-    (str "linear-gradient(to top, hsl(" hue ", " saturation "%, " lightness "%), hsl(" hue ", " saturation "%, " (- lightness 5) "%))")))
 
 ;; Components ==================================================================
 

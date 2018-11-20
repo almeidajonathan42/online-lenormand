@@ -43,9 +43,9 @@
          :meaning-3 "Sadness"}
 
      :9 {:name "Bouquet"
-         :meaning-1 "Cordiality"
+         :meaning-1 "Happiness"
          :meaning-2 "Gift"
-         :meaning-3 "Happiness"}
+         :meaning-3 "Cordiality"}
 
      :10 {:name "Scythe"
           :meaning-1 "Sudden end"
