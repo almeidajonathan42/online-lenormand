@@ -1,6 +1,7 @@
 (ns online-lenormand.views.home
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
+            [online-lenormand.views.reading :refer [reading]]
             [online-lenormand.util.util :refer [s title-font-color card-font-color card-color random-color gradient-background description-font-color]]))
 
 
@@ -42,8 +43,6 @@
     [:h1#prompt {:style (:prompt styles)}
       "What do you want to reflect about?"]))
 
-(def input-atom (r/atom ""))
-
 (defn input []
   (let [styles
         {:input {:background "transparent"
@@ -66,8 +65,8 @@
          :spellCheck false
          :auto-focus true
          :style (:input styles)
-         :value @input-atom
-         :on-change #(reset! input-atom (-> % .-target .-value))}]]))
+         :value @(rf/subscribe [:get-question])
+         :on-change #(rf/dispatch [:set-question (-> % .-target .-value)])}]]))
 
 (defn button []
   (let [styles
@@ -83,10 +82,11 @@
                      :opacity 0}}] ;; Related to the animation
 
     [:div#go-button {:style (:container styles)
-                     :on-click #(js.console.log "Reframe:" @(rf/subscribe [:reflection-input]))}
+                     :on-click #(rf/dispatch [:set-state "reading"])}
       [:p "Go!"]]))
 
-(defn home []
+
+(defn writing []
   (let [styles
         {:container {:background (gradient-background hue)
                      :height "100%"
@@ -103,3 +103,8 @@
       [prompt]
       [input]
       [button]]))
+
+(defn home []
+  (cond
+    (= @(rf/subscribe [:get-state]) "writing") [writing]
+    (= @(rf/subscribe [:get-state]) "reading") [reading]))

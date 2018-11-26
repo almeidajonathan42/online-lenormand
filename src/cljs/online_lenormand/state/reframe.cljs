@@ -2,12 +2,28 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]))
 
-(rf/reg-event-db              ;; sets up initial application state
+(rf/reg-event-db
   :initialize
-  (fn [_ _]                   ;; the two parameters are not important here, so use _
-    {:reflection-input "lalalala"}))
+  (fn [_ _]
+    {:state "writing"
+     :question ""}))
 
 (rf/reg-sub
-  :reflection-input
-  (fn [db _]     ;; db is current app state. 2nd unused param is query vector
-    (:reflection-input db))) ;; return a query computation over the application state
+  :get-state
+  (fn [db _]
+    (:state db)))
+
+(rf/reg-event-db
+  :set-state
+  (fn [db [_ val]]
+    (assoc db :state val)))
+
+(rf/reg-sub
+  :get-question
+  (fn [db _]
+    (:question db)))
+
+(rf/reg-event-db
+  :set-question
+  (fn [db [_ val]]
+    (assoc db :question val)))

@@ -19,7 +19,7 @@
                  :margin-bottom "3vw"}}]
 
     [:h1#title {:style (:title styles)}
-      "What should I do to meet my next love?"]))
+      @(rf/subscribe [:get-question])]))
 
 (defn select-meaning [selected-meaning new-meaning is-open]
   (if @is-open
@@ -93,6 +93,7 @@
 (defn card [number name]
   (let [is-open (r/atom true)
         selected-meaning (r/atom nil)
+        lowercase-name (clojure.string/lower-case name)
         styles
         {:container {:background (card-color hue)
                      :height "18vw"
@@ -112,23 +113,38 @@
          :card-name-container {:color (card-font-color hue)
                                :font-family "Lora"
                                :font-size "1.5em"
-                               :margin ".5em"}}]
+                               :margin ".5em"}
+         :image {:width "9vw"
+                 :filter "invert(100%)"
+                 :opacity ".5"}}]
 
     [:div
       [:div {:style (:container styles)}
         [:div {:style (:number-container styles)}
           [:p number]]
+        [:div {:style (:image-container styles)}
+          [:img {:src (str "images/" lowercase-name ".png")
+                 :style (:image styles)}]]
         [:div {:style (:card-name-container styles)}
           [:p name]]]
       [meanings number is-open selected-meaning]]))
 
 
+(defn remove-element [coll element]
+  (vec (remove #(= element %) coll)))
+
+(defn include-element [coll element]
+  (conj coll element))
+
 (defn draw-cards [number]
   (let [card-numbers (atom (vec (range 1 37)))
         drawn-cards (atom [])]
-    (swap! drawn-cards conj (for [x (range number)] (rand-nth @card-numbers)))
+    (doseq [i (range 5)
+            :let [random (rand-nth @card-numbers)]]
+      (swap! card-numbers remove-element random)
+      (swap! drawn-cards include-element random))
 
-    (vec (get @drawn-cards 0))))
+    @drawn-cards))
 
 (defn cards []
   (let [drawn-cards (draw-cards 5)
@@ -143,6 +159,22 @@
             :let [keyword-number (keyword (str number))]]
         [card number (get-in cards-meanings [:en keyword-number :name])])]))
 
+(defn button []
+  (let [styles
+        {:container {:background "transparent"
+                     :color (title-font-color hue)
+                     :font-size "1.5em"
+                     :text-align "center"
+                     :border (str "1px solid " (title-font-color hue))
+                     :border-radius "100vw"
+                     :padding "0.5em 1em"
+                     :margin-top "1.2em"
+                     :cursor "pointer"}}]
+
+    [:div {:style (:container styles)
+           :on-click #(rf/dispatch [:set-state "writing"])}
+      [:p "Go back"]]))
+
 (defn reading []
   (let [styles
         {:container {:background (gradient-background hue)
@@ -156,4 +188,5 @@
 
     [:div {:style (:container styles)}
       [title]
-      [cards]]))
+      [cards]
+      [button]]))

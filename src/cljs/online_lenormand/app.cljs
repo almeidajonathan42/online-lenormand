@@ -7,4 +7,4 @@
 
 (defn init []
   (rf/dispatch-sync [:initialize])
-  (r/render-component [reading] (.getElementById js/document "container")))
+  (r/render-component [home] (.getElementById js/document "container")))

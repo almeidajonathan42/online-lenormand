@@ -27,7 +27,7 @@
          :meaning-2 "Health"
          :meaning-3 "Spirituality"}
 
-     :6 {:name "Clouds"
+     :6 {:name "Cloud"
          :meaning-1 "Chaos"
          :meaning-2 "Confusion"
          :meaning-3 "Doubt"}
@@ -112,7 +112,7 @@
           :meaning-2 "Decisions"
           :meaning-3 "Many opportunities"}
 
-     :23 {:name "Mice"
+     :23 {:name "Mouse"
           :meaning-1 "Reduction"
           :meaning-2 "Destruction"
           :meaning-3 "Deficiency"}
