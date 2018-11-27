@@ -72,17 +72,17 @@
   (let [styles
         {:container {:background "transparent"
                      :color (title-font-color hue)
-                     :font-size "1.5em"
+                     :font-size "1.5vw"
                      :text-align "center"
                      :border (str "1px solid " (title-font-color hue))
                      :border-radius "100vw"
-                     :padding "0.5em 1em"
-                     :margin-top "1.2em"
+                     :padding "1vw 2vw"
+                     :margin-top "2.5vw"
                      :cursor "pointer"
                      :opacity 0}}] ;; Related to the animation
 
-    [:div#go-button {:style (:container styles)
-                     :on-click #(rf/dispatch [:set-state "reading"])}
+    [:div#go-button.gobutton {:style (:container styles)
+                              :on-click #(rf/dispatch [:set-state "reading"])}
       [:p "Go!"]]))
 
 

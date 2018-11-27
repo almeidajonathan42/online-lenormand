@@ -56,3 +56,27 @@ html, body, #container {
   animation-delay: .8s;
   animation-fill-mode: forwards;
 }
+
+#card-container {
+  animation-name: going-down;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+.meaning:hover {
+  background: white !important;
+  transition: background .5s;
+}
+
+.meaning {
+  transition: background .5s;
+}
+
+.gobutton:hover {
+  box-shadow: 0px 0px 1em white;
+  transition: box-shadow .5s;
+}
+
+.gobutton {
+  transition: box-shadow .5s;
+}

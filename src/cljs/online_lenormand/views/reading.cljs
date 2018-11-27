@@ -34,16 +34,13 @@
   (let [keyword-number (keyword (str number))
         styles
         {:container {:width "12vw"
+                     :height "7.8em"
                      :margin "1em"
-                     :border-radius "1em"
-                     :border (if @is-open (s "1px solid" (card-font-color hue))
-                                          "1px solid transparent")
-                     :background (if (not @is-open) (description-font-color hue))
                      :cursor "pointer"
                      :display "flex"                   ;;Centering logic
                      :flex-direction "column"          ;;Centering logic
                      :align-items "center"             ;;Centering logic
-                     :justify-content "center"}        ;;Centering logic
+                     :justify-content "flex-begin"}        ;;Centering logic
          :container-closed {:width "12vw"
                             :margin "1em"
                             :border-radius "1em"
@@ -55,10 +52,14 @@
                             :flex-direction "column"          ;;Centering logic
                             :align-items "center"             ;;Centering logic
                             :justify-content "center"} ;;Centering logic
-         :meaning {:height "2.2em"
+         :meaning {:height "2.2vw"
                    :width "100%"
-                   :color (if @is-open (card-font-color hue)
-                                       (gradient-background hue))
+                   :border-radius "1em"
+                   :background (card-color hue)
+                   :color (card-font-color hue)
+                   :margin ".2em"
+                   :font-size "1vw"
+
                    :display "flex"                   ;;Centering logic
                    :flex-direction "column"          ;;Centering logic
                    :align-items "center"             ;;Centering logic
@@ -66,28 +67,28 @@
 
     (if @is-open
       [:div {:style (:container styles)}
-        [:div {:style (:meaning styles)
-               :on-click #(select-meaning selected-meaning 1 is-open)}
+        [:div.meaning {:style (:meaning styles)
+                       :on-click #(select-meaning selected-meaning 1 is-open)}
           [:p (get-in cards-meanings [:en keyword-number :meaning-1])]]
-        [:div {:style (:meaning styles)
-               :on-click #(select-meaning selected-meaning 2 is-open)}
+        [:div.meaning {:style (:meaning styles)
+                       :on-click #(select-meaning selected-meaning 2 is-open)}
           [:p (get-in cards-meanings [:en keyword-number :meaning-2])]]
-        [:div {:style (:meaning styles)
-               :on-click #(select-meaning selected-meaning 3 is-open)}
+        [:div.meaning {:style (:meaning styles)
+                       :on-click #(select-meaning selected-meaning 3 is-open)}
           [:p (get-in cards-meanings [:en keyword-number :meaning-3])]]]
 
       [:div {:style (:container styles)}
         (if (= 1 @selected-meaning)
-          [:div {:style (:meaning styles)
-                 :on-click #(select-meaning selected-meaning 1 is-open)}
+          [:div.meaning {:style (:meaning styles)
+                         :on-click #(select-meaning selected-meaning 1 is-open)}
             [:p (get-in cards-meanings [:en keyword-number :meaning-1])]])
         (if (= 2 @selected-meaning)
-          [:div {:style (:meaning styles)
-                 :on-click #(select-meaning selected-meaning 2 is-open)}
+          [:div.meaning {:style (:meaning styles)
+                         :on-click #(select-meaning selected-meaning 2 is-open)}
             [:p (get-in cards-meanings [:en keyword-number :meaning-2])]])
         (if (= 3 @selected-meaning)
-          [:div {:style (:meaning styles)
-                 :on-click #(select-meaning selected-meaning 3 is-open)}
+          [:div.meaning {:style (:meaning styles)
+                         :on-click #(select-meaning selected-meaning 3 is-open)}
             [:p (get-in cards-meanings [:en keyword-number :meaning-3])]])])))
 
 (defn card [number name]
@@ -100,7 +101,6 @@
                      :width "12vw"
                      :margin "1em"
                      :border-radius "1em"
-                     ; :box-shadow "5px 10px 18px #888888"
                      :display "flex"                   ;;Centering logic
                      :flex-direction "column"          ;;Centering logic
                      :align-items "center"             ;;Centering logic
@@ -108,15 +108,15 @@
          :number-container {:align-self "flex-start"
                             :color (card-font-color hue)
                             :font-family "Lora"
-                            :font-size "1.5em"
-                            :margin ".5em"}
+                            :font-size "1.5vw"
+                            :margin "1vw"}
          :card-name-container {:color (card-font-color hue)
                                :font-family "Lora"
-                               :font-size "1.5em"
-                               :margin ".5em"}
+                               :font-size "1.5vw"
+                               :margin "1vw"}
          :image {:width "9vw"
                  :filter "invert(100%)"
-                 :opacity ".5"}}]
+                 :opacity ".7"}}]
 
     [:div
       [:div {:style (:container styles)}
@@ -152,9 +152,10 @@
         {:container {:display "flex"              ;;Centering logic
                      :flex-direction "row"        ;;Centering logic
                      :align-items "flex-start"        ;;Centering logic
-                     :justify-content "center"}}] ;;Centering logic
+                     :justify-content "center" ;;Centering logic
+                     :opacity 0}}]
 
-    [:div {:style (:container styles)}
+    [:div#card-container {:style (:container styles)}
       (for [number drawn-cards
             :let [keyword-number (keyword (str number))]]
         [card number (get-in cards-meanings [:en keyword-number :name])])]))
@@ -163,16 +164,16 @@
   (let [styles
         {:container {:background "transparent"
                      :color (title-font-color hue)
-                     :font-size "1.5em"
+                     :font-size "1.5vw"
                      :text-align "center"
                      :border (str "1px solid " (title-font-color hue))
                      :border-radius "100vw"
-                     :padding "0.5em 1em"
-                     :margin-top "1.2em"
+                     :padding "1vw 2vw"
+                     :margin-top "2.5vw"
                      :cursor "pointer"}}]
 
-    [:div {:style (:container styles)
-           :on-click #(rf/dispatch [:set-state "writing"])}
+    [:div.gobutton {:style (:container styles)
+                    :on-click #(rf/dispatch [:set-state "writing"])}
       [:p "Go back"]]))
 
 (defn reading []
