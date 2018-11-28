@@ -34,7 +34,7 @@
   (let [keyword-number (keyword (str number))
         styles
         {:container {:width "12vw"
-                     :height "7.8em"
+                     :height "8vw"
                      :margin "1em"
                      :cursor "pointer"
                      :display "flex"                   ;;Centering logic
@@ -91,7 +91,7 @@
                          :on-click #(select-meaning selected-meaning 3 is-open)}
             [:p (get-in cards-meanings [:en keyword-number :meaning-3])]])])))
 
-(defn card [number name]
+(defn card [number name clicked]
   (let [is-open (r/atom true)
         selected-meaning (r/atom nil)
         lowercase-name (clojure.string/lower-case name)
@@ -101,10 +101,21 @@
                      :width "12vw"
                      :margin "1em"
                      :border-radius "1em"
+                     :cursor "pointer"
                      :display "flex"                   ;;Centering logic
                      :flex-direction "column"          ;;Centering logic
                      :align-items "center"             ;;Centering logic
                      :justify-content "space-between"} ;;Centering logic
+         :flip-container {:background (card-color hue)
+                          :height "18vw"
+                          :width "12vw"
+                          :margin "1em"
+                          :border-radius "1em"
+                          :cursor "pointer"
+                          :display "flex"                   ;;Centering logic
+                          :flex-direction "column"          ;;Centering logic
+                          :align-items "center"             ;;Centering logic
+                          :justify-content "center"} ;;Centering logic
          :number-container {:align-self "flex-start"
                             :color (card-font-color hue)
                             :font-family "Lora"
@@ -116,18 +127,28 @@
                                :margin "1vw"}
          :image {:width "9vw"
                  :filter "invert(100%)"
-                 :opacity ".7"}}]
+                 :opacity ".7"}
+         :interrogation {:font-size "10vw"
+                         :font-family "Lora"
+                         :color (card-font-color hue)}}]
 
-    [:div
-      [:div {:style (:container styles)}
-        [:div {:style (:number-container styles)}
-          [:p number]]
-        [:div {:style (:image-container styles)}
-          [:img {:src (str "images/" lowercase-name ".png")
-                 :style (:image styles)}]]
-        [:div {:style (:card-name-container styles)}
-          [:p name]]]
-      [meanings number is-open selected-meaning]]))
+    [:div {:on-click #(reset! clicked true)}
+
+      (if @clicked
+        [:div
+          [:div {:style (:container styles)}
+              [:div {:style (:number-container styles)}
+                [:p number]]
+              [:div {:style (:image-container styles)}
+                [:img {:src (str "images/" lowercase-name ".png")
+                       :style (:image styles)}]]
+              [:div {:style (:card-name-container styles)}
+                [:p name]]]
+          [meanings number is-open selected-meaning]]
+      ;; else
+        [:div {:style (:flip-container styles)}
+          [:p {:style (:interrogation styles)}
+            "?"]])]))
 
 
 (defn remove-element [coll element]
@@ -149,16 +170,18 @@
 (defn cards []
   (let [drawn-cards (draw-cards 5)
         styles
-        {:container {:display "flex"              ;;Centering logic
+        {:container {:height "20em"
+                     :display "flex"              ;;Centering logic
                      :flex-direction "row"        ;;Centering logic
                      :align-items "flex-start"        ;;Centering logic
                      :justify-content "center" ;;Centering logic
-                     :opacity 0}}]
+                     :opacity 0}}] ;; Related to the animation
 
     [:div#card-container {:style (:container styles)}
       (for [number drawn-cards
-            :let [keyword-number (keyword (str number))]]
-        [card number (get-in cards-meanings [:en keyword-number :name])])]))
+            :let [keyword-number (keyword (str number))
+                  clicked (r/atom false)]]
+        [card number (get-in cards-meanings [:en keyword-number :name]) clicked])]))
 
 (defn button []
   (let [styles
