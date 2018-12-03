@@ -1,4 +1,4 @@
-(ns online-lenormand.views.reading
+(ns online-lenormand.views.reading-prediction
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [online-lenormand.data.cards-meanings :refer [cards-meanings]]
@@ -150,7 +150,6 @@
           [:p {:style (:interrogation styles)}
             "?"]])]))
 
-
 (defn remove-element [coll element]
   (vec (remove #(= element %) coll)))
 
@@ -160,28 +159,59 @@
 (defn draw-cards [number]
   (let [card-numbers (atom (vec (range 1 37)))
         drawn-cards (atom [])]
-    (doseq [i (range 5)
+    (doseq [i (range number)
             :let [random (rand-nth @card-numbers)]]
       (swap! card-numbers remove-element random)
       (swap! drawn-cards include-element random))
 
     @drawn-cards))
 
+(defn separator []
+  [:div {:style {:width "22vw"
+                 :height "1vw"}}])
+
+(defn separator2 []
+ [:div {:style {:width "18vw"
+                :height "1vw"}}])
+
 (defn cards []
-  (let [drawn-cards (draw-cards 5)
+  (let [drawn-cards (draw-cards 6)
         styles
-        {:container {:height "20em"
-                     :display "flex"              ;;Centering logic
-                     :flex-direction "row"        ;;Centering logic
-                     :align-items "flex-start"        ;;Centering logic
-                     :justify-content "center" ;;Centering logic
-                     :opacity 0}}] ;; Related to the animation
+        {:container {:display "flex"              ;;Centering logic
+                     :flex-direction "column"        ;;Centering logic
+                     :align-items "flex-start"    ;;Centering logic
+                     :justify-content "center"    ;;Centering logic
+                     :opacity 0} ;; Related to the animation
+         :label-container {:width "100%"
+                           :height "3vw"
+                           :min-height "3vw"
+                           :max-height "3vw"
+                           :color (description-font-color hue)
+                           :margin ".08vw"
+                           :font-size "3vw"
+                           :font-family "Lora"
+                           :display "flex"              ;;Centering logic
+                           :flex-direction "row"        ;;Centering logic
+                           :align-items "center"    ;;Centering logic
+                           :justify-content "center"}    ;;Centering logic
+         :inner-container {:height "30vw"
+                           :display "flex"              ;;Centering logic
+                           :flex-direction "row"        ;;Centering logic
+                           :align-items "flex-start"    ;;Centering logic
+                           :justify-content "center"}}]    ;;Centering logic
 
     [:div#card-container {:style (:container styles)}
-      (for [number drawn-cards
-            :let [keyword-number (keyword (str number))
-                  clicked (r/atom false)]]
-        [card number (get-in cards-meanings [:en keyword-number :name]) clicked])]))
+      [:div {:style (:label-container styles)}
+        [:p "PAST"]
+        [separator]
+        [:p "PRESENT"]
+        [separator2]
+        [:p "FUTURE"]]
+      [:div {:style (:inner-container styles)}
+        (for [number drawn-cards
+              :let [keyword-number (keyword (str number))
+                    clicked (r/atom false)]]
+          [card number (get-in cards-meanings [:en keyword-number :name]) clicked])]]))
 
 (defn button []
   (let [styles
@@ -199,7 +229,7 @@
                     :on-click #(rf/dispatch [:set-state "writing"])}
       [:p "Go back"]]))
 
-(defn reading []
+(defn reading-prediction []
   (let [styles
         {:container {:background (gradient-background hue)
                      :height "100%"
@@ -211,6 +241,5 @@
                      :justify-content "center"}}] ;;Centering logic
 
     [:div {:style (:container styles)}
-      [title]
       [cards]
       [button]]))

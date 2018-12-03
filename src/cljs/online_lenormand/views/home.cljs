@@ -1,7 +1,8 @@
 (ns online-lenormand.views.home
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
-            [online-lenormand.views.reading :refer [reading]]
+            [online-lenormand.views.reading-reflection :refer [reading-reflection]]
+            [online-lenormand.views.reading-prediction :refer [reading-prediction]]
             [online-lenormand.util.util :refer [s title-font-color card-font-color card-color random-color gradient-background description-font-color]]))
 
 
@@ -33,6 +34,23 @@
     [:p#description {:style (:text styles)}
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]))
 
+(defn button [text state]
+  (let [styles
+        {:container {:background "transparent"
+                     :color (title-font-color hue)
+                     :font-size "1.5vw"
+                     :text-align "center"
+                     :border (str "1px solid " (title-font-color hue))
+                     :border-radius "100vw"
+                     :padding "1vw 2vw"
+                     :margin-top "2.5vw"
+                     :cursor "pointer"
+                     :opacity 0}}] ;; Related to the animation
+
+    [:div#go-button.gobutton {:style (:container styles)
+                              :on-click #(rf/dispatch [:set-state state])}
+      [:p text]]))
+
 (defn prompt []
   (let [styles
         {:prompt {:color (title-font-color hue)
@@ -40,8 +58,11 @@
                   :font-size "3vw"
                   :opacity 0}}] ;; Related to the animation
 
-    [:h1#prompt {:style (:prompt styles)}
-      "What do you want to reflect about?"]))
+    [:div
+      [:h1#prompt {:style (:prompt styles)}
+        "What do you wanna do?"]
+      [button "Predict something" "reading-prediction"]
+      [button "Reflect about something" "reading-reflection"]]))
 
 (defn input []
   (let [styles
@@ -68,22 +89,7 @@
          :value @(rf/subscribe [:get-question])
          :on-change #(rf/dispatch [:set-question (-> % .-target .-value)])}]]))
 
-(defn button []
-  (let [styles
-        {:container {:background "transparent"
-                     :color (title-font-color hue)
-                     :font-size "1.5vw"
-                     :text-align "center"
-                     :border (str "1px solid " (title-font-color hue))
-                     :border-radius "100vw"
-                     :padding "1vw 2vw"
-                     :margin-top "2.5vw"
-                     :cursor "pointer"
-                     :opacity 0}}] ;; Related to the animation
 
-    [:div#go-button.gobutton {:style (:container styles)
-                              :on-click #(rf/dispatch [:set-state "reading"])}
-      [:p "Go!"]]))
 
 
 (defn writing []
@@ -100,11 +106,10 @@
     [:div {:style (:container styles)}
       [title]
       [description]
-      [prompt]
-      [input]
-      [button]]))
+      [prompt]]))
 
 (defn home []
   (cond
     (= @(rf/subscribe [:get-state]) "writing") [writing]
-    (= @(rf/subscribe [:get-state]) "reading") [reading]))
+    (= @(rf/subscribe [:get-state]) "reading-reflection") [reading-reflection]
+    (= @(rf/subscribe [:get-state]) "reading-prediction") [reading-prediction]))
