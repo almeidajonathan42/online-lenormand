@@ -222,7 +222,7 @@
                      :border (str "1px solid " (title-font-color hue))
                      :border-radius "100vw"
                      :padding "1vw 2vw"
-                     :margin-top "2.5vw"
+                     :margin-top "1.5vw"
                      :cursor "pointer"}}]
 
     [:div.gobutton {:style (:container styles)

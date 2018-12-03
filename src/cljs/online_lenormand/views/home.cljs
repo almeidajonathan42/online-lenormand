@@ -14,25 +14,79 @@
   (let [styles
         {:title {:color (title-font-color hue)
                  :font-family "Charmonman"
-                 :font-size "7vw"
+                 :font-size "6vw"
                  :font-weight "bolder"}}]
 
     [:h1#title {:style (:title styles)}
       "Online Lenormand"]))
 
+(defn mini-card [number name]
+    (let [lowercase-name (clojure.string/lower-case name)
+          styles
+          {:container {:background (card-color hue)
+                       :height "8vw"
+                       :width "5vw"
+                       :margin ".2vw"
+                       :border-radius ".5vw"
+                       :display "flex"                   ;;Centering logic
+                       :flex-direction "column"          ;;Centering logic
+                       :align-items "center"             ;;Centering logic
+                       :justify-content "space-between"} ;;Centering logic
+           :number-container {:align-self "flex-start"
+                              :color (card-font-color hue)
+                              :font-family "Lora"
+                              :font-size "1vw"
+                              :margin ".5vw"}
+           :card-name-container {:color (card-font-color hue)
+                                 :font-family "Lora"
+                                 :font-size "1vw"
+                                 :margin "1vw"}
+           :image {:width "2.7vw"
+                   :filter "invert(100%)"
+                   :opacity ".7"}}]
+
+      [:div
+        [:div {:style (:container styles)}
+            [:div {:style (:number-container styles)}
+              [:p number]]
+            [:div {:style (:image-container styles)}
+              [:img {:src (str "images/" lowercase-name ".png")
+                     :style (:image styles)}]]
+            [:div {:style (:card-name-container styles)}
+              [:p name]]]]))
+
+(defn card-container []
+  (let [styles
+        {:container {:display "flex"                   ;;Centering logic
+                     :flex-direction "row"          ;;Centering logic
+                     :align-items "center"             ;;Centering logic
+                     :justify-content "center"}}] ;;Centering logic
+
+    [:div {:style (:container styles)}
+      [mini-card 18 "Dog"]
+      [mini-card 7 "Snake"]]))
+
 (defn description []
   (let [styles
         {:text {:color (description-font-color hue)
                 :width "70%"
-                :margin-top ".08em"
-                :margin-bottom "4em"
+                :margin-top "1vw"
+                :margin-bottom "2vw"
                 :font-size "1.4vw"
                 :font-family "Lora"
                 :text-align "center"
                 :opacity 0}}] ;; Related to the animation
 
-    [:p#description {:style (:text styles)}
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."]))
+    [:div#description {:style (:text styles)}
+      [:p "1. Choose the type of reading you want"]
+      [:br]
+      [:p "2. Think about a question..."]
+      [:br]
+      [:p "3. Read the cards in pairs."]
+      [:br]
+      [card-container]
+      [:br]
+      [:p "The second card becomes a caracteristic of the first"]]))
 
 (defn button [text state]
   (let [styles
@@ -60,9 +114,9 @@
 
     [:div
       [:h1#prompt {:style (:prompt styles)}
-        "What do you wanna do?"]
-      [button "Predict something" "reading-prediction"]
-      [button "Reflect about something" "reading-reflection"]]))
+        "What type of reading do you want?"]
+      [button "Prediction" "reading-prediction"]
+      [button "Reflection" "reading-reflection"]]))
 
 (defn input []
   (let [styles
