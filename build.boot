@@ -10,7 +10,8 @@
                  [weasel                    "0.7.0"      :scope "test"]
                  [reagent                   "0.6.0"]
                  [org.clojure/clojurescript "1.9.562"]
-                 [re-frame                  "0.10.5"]])
+                 [re-frame                  "0.10.5"]
+                 [clj-commons/secretary     "1.2.4"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]

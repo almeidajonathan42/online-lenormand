@@ -1,6 +1,7 @@
 (ns online-lenormand.views.home
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
+            [secretary.core :as secretary]
             [online-lenormand.views.reading :refer [reading]]
             [online-lenormand.util.util :refer [s title-font-color card-font-color card-color random-color gradient-background description-font-color]]))
 
@@ -72,17 +73,17 @@
   (let [styles
         {:container {:background "transparent"
                      :color (title-font-color hue)
-                     :font-size "1.5vw"
+                     :font-size "1.5em"
                      :text-align "center"
                      :border (str "1px solid " (title-font-color hue))
                      :border-radius "100vw"
-                     :padding "1vw 2vw"
-                     :margin-top "2.5vw"
+                     :padding "0.5em 1em"
+                     :margin-top "1.2em"
                      :cursor "pointer"
                      :opacity 0}}] ;; Related to the animation
 
-    [:div#go-button.gobutton {:style (:container styles)
-                              :on-click #(rf/dispatch [:set-state "reading"])}
+    [:div#go-button {:style (:container styles)
+                     :on-click #(rf/dispatch [:set-state "reading"])}
       [:p "Go!"]]))
 
 

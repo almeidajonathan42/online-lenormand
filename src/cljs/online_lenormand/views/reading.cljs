@@ -132,23 +132,14 @@
                          :font-family "Lora"
                          :color (card-font-color hue)}}]
 
-    [:div {:on-click #(reset! clicked true)}
-
-      (if @clicked
-        [:div
-          [:div {:style (:container styles)}
-              [:div {:style (:number-container styles)}
-                [:p number]]
-              [:div {:style (:image-container styles)}
-                [:img {:src (str "images/" lowercase-name ".png")
-                       :style (:image styles)}]]
-              [:div {:style (:card-name-container styles)}
-                [:p name]]]
-          [meanings number is-open selected-meaning]]
-      ;; else
-        [:div {:style (:flip-container styles)}
-          [:p {:style (:interrogation styles)}
-            "?"]])]))
+    [:div {:style (:container styles)}
+      [:div {:style (:number-container styles)}
+        [:p number]]
+      [:div {:style (:image-container styles)}
+        [:img {:src (str "images/" lowercase-name ".png")
+               :style (:image styles)}]]
+      [:div {:style (:card-name-container styles)}
+        [:p name]]]))
 
 
 (defn remove-element [coll element]
